@@ -99,8 +99,8 @@ func main() {
 	// with your own Mailtrap credentials.
 	flag.StringVar(&cfg.smtp.host, "smtp-host", "smtp.mailtrap.io", "SMTP host")
 	flag.IntVar(&cfg.smtp.port, "smtp-port", 2525, "SMTP port")
-	flag.StringVar(&cfg.smtp.username, "smtp-username", "d07b83269b2b20", "SMTP username")
-	flag.StringVar(&cfg.smtp.password, "smtp-password", "cf5f2176a12f39", "SMTP password")
+	flag.StringVar(&cfg.smtp.username, "smtp-username", "", "SMTP username")
+	flag.StringVar(&cfg.smtp.password, "smtp-password", "", "SMTP password")
 	flag.StringVar(&cfg.smtp.sender, "smtp-sender", "Greenlight <no-reply@greenlight.alexedwards.net>", "SMTP sender")
 	flag.StringVar(&ori, "cors-trusted-origins", "", "Trusted CORS origins (space separated)")
 
@@ -116,7 +116,9 @@ func main() {
 		os.Exit(0)
 	}
 	cfg.cors.trustedOrigins = strings.Fields(ori)
-
+	if cfg.smtp.username == "" && cfg.smtp.password == "" {
+		log.Fatalln("smtp credentials required")
+	}
 	// Initialize a new jsonlog.Logger which writes any messages *at or above* the INFO
 	// severity level to the standard out stream.
 
